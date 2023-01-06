@@ -5,10 +5,10 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/workflows/download_gpg_key
-        with:
-          key: ${{ secrets.GPG_KEY }}
+      - uses: actions/checkout@v3
+      #- uses: ./.github/workflows/download_gpg_key
+      #  with:
+      #    key: ${{ secrets.GPG_KEY }}
       - name: Check Version before any work
         uses: ./.github/workflows/check_version
         with:
@@ -29,7 +29,8 @@ jobs:
           message: 'release-${{ steps.check_version.outputs.version }}'
           tag: '${{ steps.check_version.outputs.version }}'
       - name: Publish 
-        run: mvn -B -Drepo.id=ossrh -Drepo.login=uidadmin -Drepo.pwd="${{ secrets.SONATYPE_REPO_PASSWORD }}" -Dgpg.passphrase="${{ secrets.GPG_PASSPHRASE }}" clean deploy
+        #run: mvn -B -Drepo.id=ossrh -Drepo.login=uidadmin -Drepo.pwd="${{ secrets.SONATYPE_REPO_PASSWORD }}" -Dgpg.passphrase="${{ secrets.GPG_PASSPHRASE }}" clean deploy
+        run: mvn -B clean package
         #"
       - name: Bump Version
         run: mvn versions:set -DnextSnapshot
